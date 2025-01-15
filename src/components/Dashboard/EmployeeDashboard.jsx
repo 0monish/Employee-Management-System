@@ -3,13 +3,15 @@ import Header from '../layout/Header'
 import TaskListNumber from '../layout/TaskListNumber'
 import TaskList from '../TaskLIst/TaskList'
 
-const EmployeeDashboard = () => {
+const EmployeeDashboard = ({ userData }) => {
+
+
+    // console.log(userData)
     return (
         <>
-            <Header />
-            <TaskListNumber />
-            
-            <TaskList/>
+            <Header userData={userData} />
+            <TaskListNumber userData={userData} />
+            <TaskList userData={userData} />
         </>
     )
 }

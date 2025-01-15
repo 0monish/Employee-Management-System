@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
-const Login = () => {
+const Login = ({handleLogin}) => {
 
     const [formData, setFormData] = useState({
         email: '',
@@ -33,9 +33,9 @@ const Login = () => {
 
     // VALIDATE EMAIL
     const validateEmail = (email) => {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail|outlook|yahoo)\.com$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]{6,}@(gmail|outlook|yahoo)\.com$/;
         if (!emailRegex.test(email)) {
-            setEmailError('Only @gmail.com, @outlook.com, or @yahoo.com are allowed.');
+            setEmailError('Min 6 characters before @ and only @gmail.com, @outlook.com, or @yahoo.com are allowed.');
         } else {
             setEmailError('');
         }
@@ -56,7 +56,7 @@ const Login = () => {
         });
     };
 
-    // FOR LOGIN BUTTON DISABLED OR ENABLED
+    // TO SET LOGIN BUTTON DISABLED OR ENABLED
     const isFormValid =
         !emailError &&
         !Object.values(passwordErrors).some((error) => error) &&
@@ -66,12 +66,11 @@ const Login = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-
-        console.log(formData.email, formData.password);
+        handleLogin(formData.email, formData.password);
+        // console.log(formData.email, formData.password);
 
         // CLEAR FORM DATA AFTER SUCCESSFUL SUBMISSION
         setFormData({ email: '', password: '' });
-
     }
 
     return (
@@ -109,6 +108,7 @@ const Login = () => {
                             {passwordVisible ? <FaEyeSlash /> : <FaEye />}
                         </button>
                     </div>
+
                     {/* Password Error Messages */}
                     <div className="mt-3 text-sm text-red-500">
                         {passwordErrors.length && <p>Password must be 8-15 characters long.</p>}
@@ -116,6 +116,7 @@ const Login = () => {
                         {passwordErrors.number && <p>Must include at least one number.</p>}
                         {passwordErrors.special && <p>Must include at least one special character.</p>}
                     </div>
+                    
                     <button
                         type="submit"
                         disabled={!isFormValid}
