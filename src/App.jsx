@@ -7,64 +7,58 @@ import { AuthContext } from './context/AuthProvider'
 const App = () => {
 
   const [user, setUser] = useState(null)
-  const [adminData, setAdminData] = useState(null)
-  const [empData, setEmpData] = useState(null)
+  const [loggedInUserData, setLoggedInUserData] = useState(null)
+  const userData = useContext(AuthContext)
 
-  const authData = useContext(AuthContext)
-  // console.log(authData)
 
   // THIS IS TO CHECK THAT IF THE USER IS ALREADY LOGGED IN OR NOT
   useEffect(() => {
-    if (authData) {
-      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"))
-
-      if (loggedInUser) {
-        setUser(loggedInUser.role)
-      }
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"))
+    if (loggedInUser) {
+      setUser(loggedInUser.role)
+      setLoggedInUserData(loggedInUser.userData)
     }
+
     // console.log(loggedInUser.role)
     console.log("Executed")
     // CAN BE WRITTEN IN A SINGLE LINE
-    // authData && localStorage.getItem("loggedInUser") && setUser(localStorage.getItem("loggedInUser").role)
+    // userData && localStorage.getItem("loggedInUser") && setUser(localStorage.getItem("loggedInUser").role)
 
-  }, [authData])
+  }, [])
 
 
   const handleLogin = (email, password) => {
 
-    if (authData) {
+    //  console.log("From App - ", email, password)
 
-      setAdminData(authData.admin.find(admin => (admin.email === email && admin.password === password)))
-      setEmpData(authData.employees.find(emp => (emp.email === email && emp.password === password)))
-      
-      if (adminData) {
-        // THIS IS SET TO GET TO THE ADMIN DASHBOARD
-        setUser('admin')
+    if (userData) {
+      console.log("From App under auth - ", email, password)
 
-        // CREATING A NEW ONBJECT IN LOCAL STORAGE FOR LOGGED IN USER 
-        localStorage.setItem("loggedInUser", JSON.stringify({ role: "admin" }))
-        // console.log("Admin")
+      const aData = userData.admin.find(admin => (admin.email === email && admin.password === password))
+      const eData = userData.employees.find(emp => (emp.email === email && emp.password === password))
+
+      if (aData) {
+        setUser('admin');
+        setLoggedInUserData(""); // SETTING THE ADMIN DATA AS EMPTY BECAUSE IT IS NOT REQUIRED
+        localStorage.setItem('loggedInUser', JSON.stringify({ role: 'admin', userData: "" }));
       }
 
-      else if (empData) {
-
-        // THIS IS SET TO GET TO THE EMPLOYEE DASHBOARD
-        setUser('employee')
-        // CREATING A NEW ONBJECT IN LOCAL STORAGE FOR LOGGED IN USER 
-        localStorage.setItem("loggedInUser", JSON.stringify({ role: "employee" }))
-        // console.log("User")
+      else if (eData) {
+        setUser('employee');
+        setLoggedInUserData(eData);
+        localStorage.setItem('loggedInUser', JSON.stringify({ role: 'employee', userData: eData }));
       }
+
       else {
         alert("Invalid credentials")
       }
     }
   }
 
-  // console.log(empData)
   return (
     <>
       {!user ? <Login handleLogin={handleLogin} /> : ""}
-      {user === "admin" ? <AdminDashboard userData={adminData} /> : (user === "employee" ? <EmployeeDashboard userData={empData} /> : "")}
+      {user === "admin" ? <AdminDashboard /> : (user === "employee" ? <EmployeeDashboard userData={loggedInUserData} /> : "")}
     </>
   )
 }
