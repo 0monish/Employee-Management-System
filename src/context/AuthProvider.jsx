@@ -4,7 +4,6 @@ import { getLocalStorage, setLocalStorage } from '../utils/localStorage'
 export const AuthContext = createContext()
 
 const AuthProvider = ({ children }) => {
-// localStorage.clear()
   const [userData, setUserData] = useState(null)
 
   // IT IS TO SET AND GET THE LOCAL STORAGE DATA 
@@ -15,10 +14,17 @@ const AuthProvider = ({ children }) => {
     // console.log("Executed")
   }, [])
 
+  const updateEmpData = (updatedEmpData) => {
+    setUserData((prevState) => {
+      const updatedUserData = { ...prevState, employees: updatedEmpData };
+      localStorage.setItem('employees', JSON.stringify(updatedEmpData));
+      return updatedUserData;
+    });
+  };
 
   return (
     <>
-      <AuthContext.Provider value={userData}>
+      <AuthContext.Provider value={{ userData, updateEmpData }}>
         {children}
       </AuthContext.Provider>
     </>

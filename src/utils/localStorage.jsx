@@ -12,6 +12,7 @@ const employees = [
         },
         "tasks": [
             {
+                "id":1,
                 "activeTask": false,
                 "newTask": true,
                 "completedTask": false,
@@ -22,6 +23,7 @@ const employees = [
                 "taskCategory": "Design" 
             },
             {
+                "id":2,
                 "activeTask": false,
                 "newTask": false,
                 "completedTask": true,
@@ -32,6 +34,7 @@ const employees = [
                 "taskCategory": "Meeting"
             },
             {
+                "id":3,
                 "activeTask": false,
                 "newTask": false,
                 "completedTask": false,
@@ -42,6 +45,7 @@ const employees = [
                 "taskCategory": "Documentation"
             },
             {
+                "id":4,
                 "activeTask": true,
                 "newTask": false,
                 "completedTask": false,
@@ -66,6 +70,7 @@ const employees = [
         },
         "tasks": [
             {
+                "id":1,
                 "activeTask": true,
                 "newTask": false,
                 "completedTask": false,
@@ -76,6 +81,7 @@ const employees = [
                 "taskCategory": "Database"
             },
             {
+                "id":2,
                 "activeTask": false,
                 "newTask": false,
                 "completedTask": true,
@@ -100,6 +106,7 @@ const employees = [
         },
         "tasks": [
             {
+                "id":1,
                 "activeTask": true,
                 "newTask": false,
                 "completedTask": false,
@@ -110,6 +117,7 @@ const employees = [
                 "taskCategory": "Presentation"
             },
             {
+                "id":2,
                 "activeTask": false,
                 "newTask": true,
                 "completedTask": false,
@@ -120,6 +128,7 @@ const employees = [
                 "taskCategory": "Development"
             },
             {
+                "id":3,
                 "activeTask": false,
                 "newTask": false,
                 "completedTask": true,
@@ -144,6 +153,7 @@ const employees = [
         },
         "tasks": [
             {
+                "id":1,
                 "activeTask": true,
                 "newTask": false,
                 "completedTask": false,
@@ -154,6 +164,7 @@ const employees = [
                 "taskCategory": "Documentation"
             },
             {
+                "id":2,
                 "activeTask": false,
                 "newTask": false,
                 "completedTask": false,
@@ -178,16 +189,18 @@ const employees = [
         },
         "tasks": [
             {
+                "id":1,
                 "activeTask": false,
                 "newTask": true,
                 "completedTask": false,
                 "failedTask": false,
                 "taskTitle": "Improve UI",
-                "taskDescription": "Enhance the user interface for a better user experience",
-                "taskDate": "2025-01-13",
+                "taskDescription": "Enhance the user interface for a better user experience mobile",
+                "taskDate": "2025-01-05",
                 "taskCategory": "Design"
             },
             {
+                "id":2,
                 "activeTask": true,
                 "newTask": false,
                 "completedTask": false,
@@ -198,6 +211,7 @@ const employees = [
                 "taskCategory": "Development"
             },
             {
+                "id":3,
                 "activeTask": false,
                 "newTask": true,
                 "completedTask": false,
@@ -208,6 +222,7 @@ const employees = [
                 "taskCategory": "Management"
             },
             {
+                "id":4,
                 "activeTask": false,
                 "newTask": false,
                 "completedTask": true,
@@ -218,6 +233,7 @@ const employees = [
                 "taskCategory": "Quality Assurance"
             },
             {
+                "id":5,
                 "activeTask": false,
                 "newTask": false,
                 "completedTask": false,
@@ -228,16 +244,18 @@ const employees = [
                 "taskCategory": "Data Management"
             },
             {
+                "id":6,
                 "activeTask": false,
                 "newTask": true,
                 "completedTask": false,
                 "failedTask": false,
                 "taskTitle": "Improve UI",
-                "taskDescription": "Enhance the user interface for a better user experience",
+                "taskDescription": "Enhance the user interface for a better user experience in website",
                 "taskDate": "2025-01-13",
                 "taskCategory": "Design"
             },
             {
+                "id":7,
                 "activeTask": false,
                 "newTask": false,
                 "completedTask": true,
@@ -248,6 +266,7 @@ const employees = [
                 "taskCategory": "DevOps"
             },
             {
+                "id":8,
                 "activeTask": false,
                 "newTask": false,
                 "completedTask": true,

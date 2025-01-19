@@ -3,10 +3,10 @@ import Header from '../layout/Header'
 import CreateTask from '../layout/CreateTask'
 import AllTask from '../layout/AllTask'
 
-const AdminDashboard = () => {
+const AdminDashboard = ({changeUser}) => {
     return (
         <>
-            <Header />
+            <Header changeUser={changeUser} />
             <CreateTask/>
             <AllTask/>
         </>

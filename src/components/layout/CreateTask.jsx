@@ -1,52 +1,138 @@
 import React, { useContext, useState } from 'react'
-// import { AuthContext } from '../../context/AuthProvider'
+import { AuthContext } from '../../context/AuthProvider'
+
 const CreateTask = () => {
 
-    // const [userData, setUserData] = useContext(AuthContext)
+    const { userData, updateEmpData } = useContext(AuthContext);
 
+    const [empData, setEmpData] = useState(userData.employees)
 
 
     const [formData, setFormData] = useState({
         taskTitle: '',
         taskDate: '',
-        asignTo: '',
+        assignTo: '',
         category: '',
         taskDescription: ''
     })
 
+    const [error, setError] = useState({
+        taskTitleError: "",
+        dateError: "",
+        assignToError: "",
+        categoryError: "",
+        descError: ""
+    });
+
     const handleChanges = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
-    }
+        setFormData({ ...formData, [e.target.name]: e.target.value });
 
+        switch (e.target.name) {
+            case "taskTitle":
+            case "assignTo":
+            case "category":
+                validateCommonField(e.target.value, e.target.name);
+                break;
+            case "taskDate":
+                validateTaskDate(e.target.value);
+                break;
+            case "taskDescription":
+                validateTaskDescription(e.target.value);
+                break;
+            default:
+                break;
+        }
+    };
 
-    // const [newTask, setNewTask] = useState({})
+    const validateCommonField = (value, fieldName) => {
+        const commonRegex = /^[a-zA-Z\s]{3,25}$/;
+        const errorMsg = "Min. 3 and Max. 25 alphabet characters.";
+        if (!commonRegex.test(value)) {
+            setError({ [`${fieldName}Error`]: errorMsg });
+        } else {
+            setError("");
+        }
+    };
+
+    const validateTaskDate = (taskDate) => {
+        const selectedDate = new Date(taskDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate > today) {
+            setError({ dateError: "Only present or past dates are allowed." });
+        } else {
+            setError("");
+        }
+    };
+
+    const validateTaskDescription = (taskDescription) => {
+        const descRegex = /^[a-zA-Z0-9 .,]{10,60}$/;
+        if (!descRegex.test(taskDescription)) {
+            setError({ descError: "Only 10-60 alphabets, digits, full stops, space and commas are allowed." });
+        } else {
+            setError("");
+        }
+    };
+
+    const isFormValid =
+        !error.taskTitleError &&
+        !error.dateError &&
+        !error.assignToError &&
+        !error.categoryError &&
+        !error.descError &&
+        formData.taskTitle &&
+        formData.taskDate &&
+        formData.assignTo &&
+        formData.category &&
+        formData.taskDescription
+
 
     const submitHandler = (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
-        // setNewTask({ formData.taskTitle, taskDescription, taskDate, category, active: false, newTask: true, failed: false, completed: false })
+        const updatedEmpData = empData.map((emp) => {
+            if (formData.assignTo === emp.firstName) {
+                // Determine the next ID based on the existing tasks
+                const nextId = emp.tasks.length > 0
+                    ? Math.max(...emp.tasks.map((task) => task.id)) + 1
+                    : 1; // START FROM 1 IF NO TASKS EXIST
 
-        // const data = userData
 
-        // data.forEach(function (elem) {
-        //     if (asignTo == elem.firstName) {
-        //         elem.tasks.push(newTask)
-        //         elem.taskCounts.newTask = elem.taskCounts.newTask + 1
-        //     }
-        // })
-        // setUserData(data)
-        console.log(formData);
+                const newTask = {
+                    id: nextId,
+                    taskTitle: formData.taskTitle,
+                    taskDescription: formData.taskDescription,
+                    taskDate: formData.taskDate,
+                    taskCategory: formData.category,
+                    activeTask: false,
+                    newTask: true,
+                    failedTask: false,
+                    completedTask: false,
+                };
+
+                return {
+                    ...emp,
+                    tasks: [...emp.tasks, newTask],
+                    taskCounts: {
+                        ...emp.taskCounts,
+                        newTask: emp.taskCounts.newTask + 1,
+                    },
+                };
+            }
+            return emp;
+        });
+
+        updateEmpData(updatedEmpData)
 
         setFormData({
             taskTitle: '',
             taskDate: '',
-            asignTo: '',
+            assignTo: '',
             category: '',
-            taskDescription: ''
+            taskDescription: '',
         })
-
     }
-
 
     return (
         <div className='p-5 mx-5 bg-[#1c1c1c] mt-10 rounded'>
@@ -55,16 +141,20 @@ const CreateTask = () => {
             >
                 <div className='w-1/2'>
                     <div>
-                        <h3 className='text-sm text-gray-300 mb-0.5'>Task Title</h3>
+                        <h3 className='text-sm text-gray-300 mb-0.5'>Task Title   {error.taskTitleError && (
+                            <p className="text-red-500 mt-2 text-sm">{error.taskTitleError}</p>
+                        )}</h3>
                         <input
                             value={formData.taskTitle}
                             name="taskTitle"
                             onChange={handleChanges}
+                            maxLength={25}
                             className='text-sm py-1 px-2 w-4/5 text-white rounded-full outline-none bg-transparent border-[1px] border-gray-400 mb-4' type="text" placeholder='Make a UI design'
                         />
                     </div>
                     <div>
-                        <h3 className='text-sm text-gray-300 mb-0.5'>Date</h3>
+                        <h3 className='text-sm text-gray-300 mb-0.5'>Date {error.dateError && (
+                            <p className="text-red-500 mt-2 text-sm">{error.dateError}</p>)}</h3>
                         <input
                             value={formData.taskDate}
                             name="taskDate"
@@ -73,43 +163,45 @@ const CreateTask = () => {
                             type="date" />
                     </div>
                     <div>
-                        <h3 className='text-sm text-gray-300 mb-0.5'>Asign to</h3>
+                        <h3 className='text-sm text-gray-300 mb-0.5'>Assign to {error.assignToError && (
+                            <p className="text-red-500 mt-2 text-sm">{error.assignToError}</p>)}</h3>
                         <input
-                            value={formData.asignTo}
-                            name="asignTo"
+                            value={formData.assignTo}
+                            name="assignTo"
                             onChange={handleChanges}
                             className='text-sm py-1 px-2 w-4/5 text-white rounded-full outline-none bg-transparent border-[1px] border-gray-400 mb-4'
                             type="text"
+                            maxLength={25}
                             list='employee'
                             placeholder='Employee name' />
 
                         <datalist id='employee'>
-                            <option value="Monish"></option>
-                            <option value="Ravi"></option>
-                            <option value="Rajveer"></option>
-                            <option value="Ravina"></option>
-
-                            {/* {userData.map(function (elem, idx) {
-                                return <option key={idx} value={elem.firstName} />
-                            })} */}
+                            {empData.map(function (emp, idx) {
+                                return <option key={idx} value={emp.firstName} />
+                            })}
                         </datalist>
                     </div>
                     <div>
-                        <h3 className='text-sm text-gray-300 mb-0.5'>Category</h3>
+                        <h3 className='text-sm text-gray-300 mb-0.5'>Category {error.categoryError && (
+                            <p className="text-red-500 mt-2 text-sm">{error.categoryError}</p>)}</h3>
                         <input
                             value={formData.category}
                             name="category"
+                            maxLength={25}
                             onChange={handleChanges}
                             className='text-sm py-1 px-2 w-4/5 text-white rounded-full outline-none bg-transparent border-[1px] border-gray-400 mb-4' type="text" placeholder='Dev, Design, Editing etc' />
                     </div>
                 </div>
 
                 <div className='w-2/5 flex flex-col items-start'>
-                    <h3 className='text-sm text-gray-300 mb-0.5'>Description</h3>
+                    <h3 className='text-sm text-gray-300 mb-0.5'>Description  {error.descError && (
+                        <p className="text-red-500 mt-2 text-sm">{error.descError}</p>)}</h3>
                     <textarea value={formData.taskDescription}
                         name="taskDescription"
+                        maxLength={60}
                         onChange={handleChanges} className='w-full h-44 text-sm py-2 px-4 text-white rounded-2xl outline-none bg-transparent border-[1px] border-gray-400'></textarea>
-                    <button className='bg-emerald-500 py-3 hover:bg-emerald-600 rounded-br-3xl rounded-tl-3xl rounded-bl-none px-5 rounded text-semibold mt-4 w-full'>Create Task</button>
+                    <button disabled={!isFormValid} className={`bg-emerald-500 py-3 hover:bg-emerald-600 rounded-br-3xl rounded-tl-3xl rounded-bl-none px-5 rounded text-semibold mt-4 w-full ${!isFormValid ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'
+                        }`}>Create Task</button>
                 </div>
 
             </form>

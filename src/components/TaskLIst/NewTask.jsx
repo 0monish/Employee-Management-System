@@ -1,10 +1,10 @@
 import React from 'react'
 
-const NewTask = ({ taskData }) => {
-    
+const NewTask = ({ taskData, updateTaskStatus }) => {
 
-    const employeeData = JSON.parse(localStorage.getItem('employeeData'));
-    const loggedInUserData = JSON.parse(localStorage.getItem('loggedInUser'));
+    const handleTaskStatus = (id) => {
+        updateTaskStatus(id, "activeTask"); 
+    };
 
     return (
         <div className="flex-shrink-0 h-full w-[300px] p-5 bg-orange-400 hover:scale-105 text-white rounded-xl">
@@ -16,7 +16,10 @@ const NewTask = ({ taskData }) => {
             <h2 className="text-2xl font-semibold mt-5">{taskData.taskTitle}</h2>
             <p className="text-sm mt-2 max-h-[105px] overflow-y-auto custom-scrollbar pe-1">{taskData.taskDescription}</p>
             <div className="flex justify-center">
-                <button className="bg-green-400 font-medium active:scale-95 hover:scale-105 text-black px-3 py-1 rounded-md mt-5">Accept</button>
+                <button
+                    className="bg-green-400 font-medium active:scale-95 hover:scale-105 text-black px-3 py-1 rounded-md mt-5"
+                    onClick={() => handleTaskStatus(taskData.id)}
+                >Accept</button>
             </div>
         </div>
     )

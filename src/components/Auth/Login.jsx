@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
-const Login = ({handleLogin}) => {
+const Login = ({ handleLogin }) => {
 
     const [formData, setFormData] = useState({
         email: '',
@@ -21,8 +21,12 @@ const Login = ({handleLogin}) => {
     // TO SET FORM DATA
     const handleChanges = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
-        if (e.target.name === 'email') validateEmail(e.target.value);
-        if (e.target.name === 'password') validatePassword(e.target.value);
+        if (e.target.name === 'email') {
+            validateEmail(e.target.value)
+        }
+        if (e.target.name === 'password') {
+            validatePassword(e.target.value)
+        }
 
     }
 
@@ -33,20 +37,20 @@ const Login = ({handleLogin}) => {
 
     // VALIDATE EMAIL
     const validateEmail = (email) => {
-        const emailRegex = /^[a-zA-Z0-9._%+-]{6,}@(gmail|outlook|yahoo)\.com$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]{6,}@(gmail|outlook|yahoo)\.com$/
         if (!emailRegex.test(email)) {
-            setEmailError('Min 6 characters before @ and only @gmail.com, @outlook.com, or @yahoo.com are allowed.');
+            setEmailError('Min 6 characters before @ and only @gmail.com, @outlook.com, or @yahoo.com are allowed.')
         } else {
-            setEmailError('');
+            setEmailError('')
         }
     };
 
     // VALIDATE PASSWORD
     const validatePassword = (password) => {
-        const lengthValid = password.length >= 8 && password.length <= 15;
-        const alphabetValid = /[a-zA-Z]/.test(password);
-        const numberValid = /\d/.test(password);
-        const specialValid = /[@$!%*?&]/.test(password);
+        const lengthValid = password.length >= 8 && password.length <= 15
+        const alphabetValid = /[a-zA-Z]/.test(password)
+        const numberValid = /\d/.test(password)
+        const specialValid = /[@$!%*?&]/.test(password)
 
         setPasswordErrors({
             length: !lengthValid,
@@ -61,16 +65,14 @@ const Login = ({handleLogin}) => {
         !emailError &&
         !Object.values(passwordErrors).some((error) => error) &&
         formData.email !== '' &&
-        formData.password !== '';
+        formData.password !== ''
 
 
     const submitHandler = (e) => {
-        e.preventDefault();
-        handleLogin(formData.email, formData.password);
-        // console.log(formData.email, formData.password);
+        e.preventDefault()
+        handleLogin(formData.email, formData.password)
 
-        // CLEAR FORM DATA AFTER SUCCESSFUL SUBMISSION
-        setFormData({ email: '', password: '' });
+        setFormData({ email: '', password: '' })
     }
 
     return (
@@ -116,7 +118,7 @@ const Login = ({handleLogin}) => {
                         {passwordErrors.number && <p>Must include at least one number.</p>}
                         {passwordErrors.special && <p>Must include at least one special character.</p>}
                     </div>
-                    
+
                     <button
                         type="submit"
                         disabled={!isFormValid}

@@ -8,7 +8,7 @@ const App = () => {
 
   const [user, setUser] = useState(null)
   const [loggedInUserData, setLoggedInUserData] = useState(null)
-  const userData = useContext(AuthContext)
+  const {userData, updateEmpData} = useContext(AuthContext)
 
 
   // THIS IS TO CHECK THAT IF THE USER IS ALREADY LOGGED IN OR NOT
@@ -18,12 +18,7 @@ const App = () => {
       setUser(loggedInUser.role)
       setLoggedInUserData(loggedInUser.userData)
     }
-
-    // console.log(loggedInUser.role)
-    console.log("Executed")
-    // CAN BE WRITTEN IN A SINGLE LINE
-    // userData && localStorage.getItem("loggedInUser") && setUser(localStorage.getItem("loggedInUser").role)
-
+    // console.log("Executed")
   }, [])
 
 
@@ -32,7 +27,7 @@ const App = () => {
     //  console.log("From App - ", email, password)
 
     if (userData) {
-      console.log("From App under auth - ", email, password)
+      // console.log("From App under auth - ", email, password)
 
       const aData = userData.admin.find(admin => (admin.email === email && admin.password === password))
       const eData = userData.employees.find(emp => (emp.email === email && emp.password === password))
@@ -58,7 +53,7 @@ const App = () => {
   return (
     <>
       {!user ? <Login handleLogin={handleLogin} /> : ""}
-      {user === "admin" ? <AdminDashboard /> : (user === "employee" ? <EmployeeDashboard userData={loggedInUserData} /> : "")}
+      {user === "admin" ? <AdminDashboard changeUser={setUser} /> : (user === "employee" ? <EmployeeDashboard changeUser={setUser} userData={loggedInUserData} /> : "")}
     </>
   )
 }
