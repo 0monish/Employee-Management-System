@@ -1,12 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { AuthContext } from '../../context/AuthProvider'
 
-const CreateTask = () => {
-
-    const { userData, updateEmpData } = useContext(AuthContext);
+const CreateTask = ({userData, updateEmpData}) => {
 
     const [empData, setEmpData] = useState(userData.employees)
-
 
     const [formData, setFormData] = useState({
         taskTitle: '',
@@ -15,6 +12,8 @@ const CreateTask = () => {
         category: '',
         taskDescription: ''
     })
+
+    const assignToRef = useRef(null) // TO GET THE REFERENCE OF THE INPUT ELEMENT assignTo
 
     const [error, setError] = useState({
         taskTitleError: "",
@@ -91,47 +90,58 @@ const CreateTask = () => {
     const submitHandler = (e) => {
         e.preventDefault();
 
-        const updatedEmpData = empData.map((emp) => {
-            if (formData.assignTo === emp.firstName) {
-                // Determine the next ID based on the existing tasks
-                const nextId = emp.tasks.length > 0
-                    ? Math.max(...emp.tasks.map((task) => task.id)) + 1
-                    : 1; // START FROM 1 IF NO TASKS EXIST
+        const empExists = empData.find(emp => (emp.firstName === formData.assignTo))
+        if (empExists) {
+
+            const updatedEmpData = empData.map((emp) => {
+                if (formData.assignTo === emp.firstName) {
+                    // DETERMINE THE NEXT ID BASED ON THE EXISTING TASKS
+                    const nextId = emp.tasks.length > 0
+                        ? Math.max(...emp.tasks.map((task) => task.id)) + 1
+                        : 1; // START FROM 1 IF NO TASKS EXIST
 
 
-                const newTask = {
-                    id: nextId,
-                    taskTitle: formData.taskTitle,
-                    taskDescription: formData.taskDescription,
-                    taskDate: formData.taskDate,
-                    taskCategory: formData.category,
-                    activeTask: false,
-                    newTask: true,
-                    failedTask: false,
-                    completedTask: false,
-                };
+                    const newTask = {
+                        id: nextId,
+                        taskTitle: formData.taskTitle,
+                        taskDescription: formData.taskDescription,
+                        taskDate: formData.taskDate,
+                        taskCategory: formData.category,
+                        activeTask: false,
+                        newTask: true,
+                        failedTask: false,
+                        completedTask: false,
+                    };
 
-                return {
-                    ...emp,
-                    tasks: [...emp.tasks, newTask],
-                    taskCounts: {
-                        ...emp.taskCounts,
-                        newTask: emp.taskCounts.newTask + 1,
-                    },
-                };
-            }
-            return emp;
-        });
+                    return {
+                        ...emp,
+                        tasks: [...emp.tasks, newTask],
+                        taskCounts: {
+                            ...emp.taskCounts,
+                            newTask: emp.taskCounts.newTask + 1,
+                        },
+                    };
+                }
+                return emp;
+            });
 
-        updateEmpData(updatedEmpData)
+            setEmpData(updatedEmpData)
+            updateEmpData(updatedEmpData)
 
-        setFormData({
-            taskTitle: '',
-            taskDate: '',
-            assignTo: '',
-            category: '',
-            taskDescription: '',
-        })
+            alert("New Task Created.")
+            setFormData({
+                taskTitle: '',
+                taskDate: '',
+                assignTo: '',
+                category: '',
+                taskDescription: '',
+            })
+        }
+        else {
+            assignToRef.current.focus();
+            alert(`Employee ${formData.assignTo} doesn't exists.`)
+            setFormData({ ...formData, assignTo: '' })
+        }
     }
 
     return (
@@ -141,7 +151,7 @@ const CreateTask = () => {
             >
                 <div className='w-1/2'>
                     <div>
-                        <h3 className='text-sm text-gray-300 mb-0.5'>Task Title   {error.taskTitleError && (
+                        <h3 className='text-sm text-gray-300 mb-0.5'>Task Title {error.taskTitleError && (
                             <p className="text-red-500 mt-2 text-sm">{error.taskTitleError}</p>
                         )}</h3>
                         <input
@@ -151,6 +161,7 @@ const CreateTask = () => {
                             maxLength={25}
                             className='text-sm py-1 px-2 w-4/5 text-white rounded-full outline-none bg-transparent border-[1px] border-gray-400 mb-4' type="text" placeholder='Make a UI design'
                         />
+
                     </div>
                     <div>
                         <h3 className='text-sm text-gray-300 mb-0.5'>Date {error.dateError && (
@@ -168,14 +179,15 @@ const CreateTask = () => {
                         <input
                             value={formData.assignTo}
                             name="assignTo"
+                            ref={assignToRef} // IT WILL CREATE A REFERENCE FOR THIS INPUT ELEMENT 
                             onChange={handleChanges}
                             className='text-sm py-1 px-2 w-4/5 text-white rounded-full outline-none bg-transparent border-[1px] border-gray-400 mb-4'
                             type="text"
                             maxLength={25}
-                            list='employee'
+                            list='empNames'
                             placeholder='Employee name' />
 
-                        <datalist id='employee'>
+                        <datalist id='empNames'>
                             {empData.map(function (emp, idx) {
                                 return <option key={idx} value={emp.firstName} />
                             })}

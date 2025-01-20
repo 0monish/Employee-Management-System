@@ -3,10 +3,15 @@ import Header from '../layout/Header';
 import TaskListNumber from '../layout/TaskListNumber';
 import TaskList from '../TaskList/TaskList';
 
-const EmployeeDashboard = ({ userData, changeUser }) => {
+// HERE THREE PARAMETERS ARE TAKEN 
+// userData FROM App.jsx LoggedInUser DATA
+// changeUser IS FOR SETTING THE USER STATUS FOR MANAGING USER LOGOUT
+// updateEmpData IS TO SEND THE UPDATED DATA BACK TO App.jsx TO UPDATE IN AuthContext
+
+const EmployeeDashboard = ({ userData, changeUser, updateEmpData }) => {
     const [filteredTasks, setFilteredTasks] = useState(userData.tasks);
     const [activeFilter, setActiveFilter] = useState(null); // TRACK ACTIVE FILTER TYPE
-    const [updatedUserData, setUpdatedUserData] = useState(userData); // ADD STATE FOR UPDATED USERDATA
+    const [updatedUserData, setUpdatedUserData] = useState(userData); // ADD STATE FOR UPDATED USERDATA WHEN EMPLOYEE UPDATES THE TASK STATUS LIKE FROM NEW TASK TO ACTIVE TASK
 
     // FUNCTION TO ACCEPT THE TASK AND UPDATE THE TASK LIST, TASK COUNTS
     const updateTaskStatus = (id, taskStatus) => {
@@ -18,7 +23,6 @@ const EmployeeDashboard = ({ userData, changeUser }) => {
 
             // CHECK IF THE LOGGED-IN USER IS THE SAME AS THE EMPLOYEE
             if (emp.id === loggedInUserData.userData.id) {
-                // console.log("in the employee dashboard under if consditiiom", taskTitle);
                 // UPDATE tasks AND taskCounts FOR THE LOGGED-IN EMPLOYEE
                 return {
                     ...emp,
@@ -68,6 +72,7 @@ const EmployeeDashboard = ({ userData, changeUser }) => {
         };
         localStorage.setItem('loggedInUser', JSON.stringify(updatedLoggedInUserData));
 
+        updateEmpData(updatedEmployeeData)
         setUpdatedUserData(updatedLoggedInUserData.userData);
         setFilteredTasks(updatedLoggedInUserData.userData.tasks);
 

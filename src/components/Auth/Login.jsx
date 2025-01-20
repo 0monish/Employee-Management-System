@@ -77,57 +77,60 @@ const Login = ({ handleLogin }) => {
 
     return (
         <div className="flex h-screen w-screen items-center justify-center">
-            <div className="flex flex-col items-center justify-center border-4 rounded-tl-3xl rounded-br-3xl border-emerald-300 px-40 py-14">
-                <form onSubmit={submitHandler} className="flex flex-col items-center justify-center">
-                    <input
-                        type="text"
-                        value={formData.email}
-                        placeholder="Email"
-                        name='email'
-                        onChange={handleChanges}
-                        required
-                        className="border-2 bg-transparent px-9 py-2 text-white border-yellow-300 placeholder-white rounded-full"
-                    />
-                    {emailError && (
-                        <p className="text-red-500 mt-2 text-sm">{emailError}</p>
-                    )}
-                    <div className="relative mt-5">
+            <div className="flex flex-col items-center justify-center space-y-8">
+                <h1 className="text-center text-4xl text-teal-200"><i>Employee Management System</i></h1>
+                <div className="flex flex-col items-center justify-center border-4 rounded-tl-3xl rounded-br-3xl border-emerald-300 px-40 py-14">
+                    <form onSubmit={submitHandler} className="flex flex-col items-center justify-center">
                         <input
-                            type={passwordVisible ? 'text' : 'password'}
-                            value={formData.password}
-                            placeholder="Password"
-                            name='password'
+                            type="text"
+                            value={formData.email}
+                            placeholder="Email"
+                            name='email'
                             onChange={handleChanges}
                             required
-                            maxLength={15}
                             className="border-2 bg-transparent px-9 py-2 text-white border-yellow-300 placeholder-white rounded-full"
                         />
+                        {emailError && (
+                            <p className="text-red-500 mt-2 text-sm">{emailError}</p>
+                        )}
+                        <div className="relative mt-5">
+                            <input
+                                type={passwordVisible ? 'text' : 'password'}
+                                value={formData.password}
+                                placeholder="Password"
+                                name='password'
+                                onChange={handleChanges}
+                                required
+                                maxLength={15}
+                                className="border-2 bg-transparent px-9 py-2 text-white border-yellow-300 placeholder-white rounded-full"
+                            />
+                            <button
+                                type="button"
+                                onClick={togglePasswordVisibility}
+                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white active:scale-75"
+                            >
+                                {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                            </button>
+                        </div>
+
+                        {/* Password Error Messages */}
+                        <div className="mt-3 text-sm text-red-500">
+                            {passwordErrors.length && <p>Password must be 8-15 characters long.</p>}
+                            {passwordErrors.alphabet && <p>Must include at least one alphabet.</p>}
+                            {passwordErrors.number && <p>Must include at least one number.</p>}
+                            {passwordErrors.special && <p>Must include at least one special character.</p>}
+                        </div>
+
                         <button
-                            type="button"
-                            onClick={togglePasswordVisibility}
-                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white active:scale-75"
+                            type="submit"
+                            disabled={!isFormValid}
+                            className={`bg-yellow-300 text-xl font-bold mt-10 px-10 py-2 rounded-tr-none rounded-br-3xl rounded-tl-3xl rounded-bl-none ${!isFormValid ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'
+                                }`}
                         >
-                            {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                            Login
                         </button>
-                    </div>
-
-                    {/* Password Error Messages */}
-                    <div className="mt-3 text-sm text-red-500">
-                        {passwordErrors.length && <p>Password must be 8-15 characters long.</p>}
-                        {passwordErrors.alphabet && <p>Must include at least one alphabet.</p>}
-                        {passwordErrors.number && <p>Must include at least one number.</p>}
-                        {passwordErrors.special && <p>Must include at least one special character.</p>}
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={!isFormValid}
-                        className={`bg-yellow-300 text-xl font-bold mt-10 px-10 py-2 rounded-tr-none rounded-br-3xl rounded-tl-3xl rounded-bl-none ${!isFormValid ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'
-                            }`}
-                    >
-                        Login
-                    </button>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     )

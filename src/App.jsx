@@ -8,7 +8,7 @@ const App = () => {
 
   const [user, setUser] = useState(null)
   const [loggedInUserData, setLoggedInUserData] = useState(null)
-  const {userData, updateEmpData} = useContext(AuthContext)
+  const { userData, updateEmpData } = useContext(AuthContext)
 
 
   // THIS IS TO CHECK THAT IF THE USER IS ALREADY LOGGED IN OR NOT
@@ -53,7 +53,7 @@ const App = () => {
   return (
     <>
       {!user ? <Login handleLogin={handleLogin} /> : ""}
-      {user === "admin" ? <AdminDashboard changeUser={setUser} /> : (user === "employee" ? <EmployeeDashboard changeUser={setUser} userData={loggedInUserData} /> : "")}
+      {user === "admin" ? <AdminDashboard changeUser={setUser} userData={userData} updateEmpData={updateEmpData} /> : (user === "employee" ? <EmployeeDashboard changeUser={setUser} userData={loggedInUserData} updateEmpData={updateEmpData} /> : "")}
     </>
   )
 }
